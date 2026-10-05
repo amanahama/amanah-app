@@ -1,10 +1,12 @@
-import { useState } from "react";
 
-const SUPABASE_URL =
-  process.env.NEXT_PUBLIC_SUPABASE_URL?.replace(/\/+$/, "");
 
-const SUPABASE_KEY =
-  process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
+  import { useState } from "react";
+import { createClient } from "@supabase/supabase-js";
+
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL,
+  process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY
+);
 
 export default function Home() {
   const [selectedService, setSelectedService] = useState("");
@@ -20,21 +22,9 @@ export default function Home() {
   const [loading, setLoading] = useState(false);
 
   const services = [
-    {
-      name: "Basic",
-      price: "₦2,000",
-      amount: 2000
-    },
-    {
-      name: "Standard",
-      price: "₦5,000",
-      amount: 5000
-    },
-    {
-      name: "Premium",
-      price: "₦10,000",
-      amount: 10000
-    },
+    { name: "Basic", price: "₦2,000", amount: 2000 },
+    { name: "Standard", price: "₦5,000", amount: 5000 },
+    { name: "Premium", price: "₦10,000", amount: 10000 },
     {
       name: "Custom / Large Order",
       price: "Contact us for price",
@@ -74,17 +64,10 @@ export default function Home() {
     setMessage("");
 
     try {
-      const response = await fetch(
-        `${SUPABASE_URL}/rest/v1/orders`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            apikey: SUPABASE_KEY,
-            Authorization: `Bearer ${SUPABASE_KEY}`,
-            Prefer: "return=minimal"
-          },
-          body: JSON.stringify({
+      const { error } = await supabase
+        .from("orders")
+        .insert([
+          {
             "Customer-name": fullName,
             "Phone": phoneNumber,
             "Email": email,
@@ -93,13 +76,11 @@ export default function Home() {
             "Service": selectedService,
             "Amount": selectedServiceData?.amount || 0,
             "Status": "Pending"
-          })
-        }
-      );
+          }
+        ]);
 
-      if (!response.ok) {
-        const errorText = await response.text();
-        throw new Error(errorText);
+      if (error) {
+        throw error;
       }
 
       setMessage("Order submitted successfully! 🎉");
@@ -136,9 +117,7 @@ export default function Home() {
           boxShadow: "0 4px 20px rgba(0,0,0,0.08)"
         }}
       >
-        <h1 style={{ textAlign: "center" }}>
-          OrderNa
-        </h1>
+        <h1 style={{ textAlign: "center" }}>OrderNa</h1>
 
         <p
           style={{
@@ -162,9 +141,7 @@ export default function Home() {
               {services.map((service) => (
                 <button
                   key={service.name}
-                  onClick={() =>
-                    setSelectedService(service.name)
-                  }
+                  onClick={() => setSelectedService(service.name)}
                   style={{
                     padding: "15px",
                     borderRadius: "10px",
@@ -191,9 +168,7 @@ export default function Home() {
               >
                 <h3>{selectedService}</h3>
 
-                <p>
-                  You selected this service.
-                </p>
+                <p>You selected this service.</p>
 
                 <button
                   onClick={() => setShowForm(true)}
@@ -215,8 +190,7 @@ export default function Home() {
             <h2>Order Form</h2>
 
             <p>
-              Selected service:{" "}
-              <strong>{selectedService}</strong>
+              Selected service: <strong>{selectedService}</strong>
             </p>
 
             <form onSubmit={handleSubmit}>
@@ -226,9 +200,7 @@ export default function Home() {
                 type="text"
                 placeholder="Enter your full name"
                 value={fullName}
-                onChange={(e) =>
-                  setFullName(e.target.value)
-                }
+                onChange={(e) => setFullName(e.target.value)}
                 style={inputStyle}
               />
 
@@ -238,9 +210,7 @@ export default function Home() {
                 type="tel"
                 placeholder="Enter your phone number"
                 value={phoneNumber}
-                onChange={(e) =>
-                  setPhoneNumber(e.target.value)
-                }
+                onChange={(e) => setPhoneNumber(e.target.value)}
                 style={inputStyle}
               />
 
@@ -250,9 +220,7 @@ export default function Home() {
                 type="email"
                 placeholder="Enter your email"
                 value={email}
-                onChange={(e) =>
-                  setEmail(e.target.value)
-                }
+                onChange={(e) => setEmail(e.target.value)}
                 style={inputStyle}
               />
 
@@ -262,9 +230,7 @@ export default function Home() {
                 type="text"
                 placeholder="Enter your address"
                 value={address}
-                onChange={(e) =>
-                  setAddress(e.target.value)
-                }
+                onChange={(e) => setAddress(e.target.value)}
                 style={inputStyle}
               />
 
@@ -274,9 +240,7 @@ export default function Home() {
                 placeholder="Describe your order"
                 rows="5"
                 value={orderDetails}
-                onChange={(e) =>
-                  setOrderDetails(e.target.value)
-                }
+                onChange={(e) => setOrderDetails(e.target.value)}
                 style={inputStyle}
               />
 
@@ -288,15 +252,11 @@ export default function Home() {
                   padding: "14px",
                   borderRadius: "8px",
                   border: "none",
-                  cursor: loading
-                    ? "not-allowed"
-                    : "pointer",
+                  cursor: loading ? "not-allowed" : "pointer",
                   fontSize: "16px"
                 }}
               >
-                {loading
-                  ? "Submitting..."
-                  : "Submit Order"}
+                {loading ? "Submitting..." : "Submit Order"}
               </button>
             </form>
 
