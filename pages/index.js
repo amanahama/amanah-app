@@ -1,6 +1,4 @@
- 
-
-                    import { useState } from "react";
+import { useState } from "react";
 
 const SUPABASE_URL =
   process.env.NEXT_PUBLIC_SUPABASE_URL?.replace(/\/+$/, "");
@@ -318,4 +316,4 @@ export default function Home() {
       </div>
     </main>
   );
-                   
+}
