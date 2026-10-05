@@ -17,10 +17,10 @@ export default function Home() {
         <h1 style={{ textAlign: "center" }}>OrderNa</h1>
 
         <p style={{ textAlign: "center", color: "#666" }}>
-          Yi oda cikin sauƙi da sauri
+          Order easily and quickly
         </p>
 
-        <h2>Zaɓi Service</h2>
+        <h2>Choose a Service</h2>
 
         <div style={{ display: "grid", gap: "12px" }}>
           <button>Basic — ₦2,000</button>
@@ -32,4 +32,3 @@ export default function Home() {
     </main>
   );
 }
-// OrderNa homepage
