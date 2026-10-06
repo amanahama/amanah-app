@@ -1,10 +1,14 @@
-import { useState } from "react";
+
+       import { useState } from "react";
 import { createClient } from "@supabase/supabase-js";
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL,
   process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY
 );
+
+// Khalifa Business ID
+const BUSINESS_ID = "8af0668b-070e-453a-bc6a-3188f4469511";
 
 export default function Home() {
   const [selectedService, setSelectedService] = useState("");
@@ -85,7 +89,8 @@ export default function Home() {
             "Order-details": orderDetails,
             "Service": selectedService,
             "Amount": selectedServiceData?.amount || 0,
-            "Status": "Pending"
+            "Status": "Pending",
+            business_id: BUSINESS_ID
           }
         ]);
 
@@ -153,9 +158,7 @@ export default function Home() {
               {services.map((service) => (
                 <button
                   key={service.name}
-                  onClick={() =>
-                    setSelectedService(service.name)
-                  }
+                  onClick={() => setSelectedService(service.name)}
                   style={{
                     padding: "15px",
                     borderRadius: "10px",
@@ -217,9 +220,7 @@ export default function Home() {
                 type="text"
                 placeholder="Enter your full name"
                 value={fullName}
-                onChange={(e) =>
-                  setFullName(e.target.value)
-                }
+                onChange={(e) => setFullName(e.target.value)}
                 style={inputStyle}
               />
 
@@ -229,9 +230,7 @@ export default function Home() {
                 type="tel"
                 placeholder="Enter your phone number"
                 value={phoneNumber}
-                onChange={(e) =>
-                  setPhoneNumber(e.target.value)
-                }
+                onChange={(e) => setPhoneNumber(e.target.value)}
                 style={inputStyle}
               />
 
@@ -241,9 +240,7 @@ export default function Home() {
                 type="email"
                 placeholder="Enter your email"
                 value={email}
-                onChange={(e) =>
-                  setEmail(e.target.value)
-                }
+                onChange={(e) => setEmail(e.target.value)}
                 style={inputStyle}
               />
 
@@ -253,9 +250,7 @@ export default function Home() {
                 type="text"
                 placeholder="Enter your address"
                 value={address}
-                onChange={(e) =>
-                  setAddress(e.target.value)
-                }
+                onChange={(e) => setAddress(e.target.value)}
                 style={inputStyle}
               />
 
@@ -265,9 +260,7 @@ export default function Home() {
                 placeholder="Describe your order"
                 rows="5"
                 value={orderDetails}
-                onChange={(e) =>
-                  setOrderDetails(e.target.value)
-                }
+                onChange={(e) => setOrderDetails(e.target.value)}
                 style={inputStyle}
               />
 
@@ -279,15 +272,11 @@ export default function Home() {
                   padding: "14px",
                   borderRadius: "8px",
                   border: "none",
-                  cursor: loading
-                    ? "not-allowed"
-                    : "pointer",
+                  cursor: loading ? "not-allowed" : "pointer",
                   fontSize: "16px"
                 }}
               >
-                {loading
-                  ? "Submitting..."
-                  : "Submit Order"}
+                {loading ? "Submitting..." : "Submit Order"}
               </button>
             </form>
 
@@ -307,4 +296,4 @@ export default function Home() {
       </div>
     </main>
   );
-    }
+      } 
